@@ -711,6 +711,13 @@ class FeatureContext implements Context, SnippetAcceptingContext {
 	}
 
 	/**
+	 * @When sleep 1 second
+	 */
+	public function sleep1Second() {
+		sleep(1);
+	}
+
+	/**
 	 * @Then /^user "([^"]*)" sends message "([^"]*)" with reference id "([^"]*)" to room "([^"]*)" with (\d+)$/
 	 *
 	 * @param string $user

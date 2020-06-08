@@ -220,6 +220,7 @@ Feature: delete
     And user "participant1" renames room "group room" to "Group room" with 200
     And user "participant1" adds "participant2" to room "group room" with 200
     And user "participant1" shares "welcome.txt" with room "group room" with OCS 100
+    And sleep 1 second
     And user "participant1" shares "welcome.txt" with user "participant2" with OCS 100
     And user "participant2" accepts last share
     When user "participant1" deletes last share
