@@ -44,6 +44,7 @@ get the messagesList array and loop through the list to generate the messages.
 			:style="{ height: item.height + 'px' }"
 			v-bind="item"
 			:messages="item"
+			:last-read-message="lastReadMessage"
 			@deleteMessage="handleDeleteMessage" />
 		<template v-if="!messagesGroupedByAuthor.length">
 			<LoadingMessage
@@ -118,6 +119,7 @@ export default {
 			previousScrollTopValue: null,
 
 			pollingErrorTimeout: 1,
+			lastReadMessage: 0,
 		}
 	},
 
@@ -209,6 +211,7 @@ export default {
 			},
 		},
 	},
+
 	mounted() {
 		this.scrollToBottom()
 		EventBus.$on('scrollChatToBottom', this.handleScrollChatToBottomEvent)
@@ -222,6 +225,7 @@ export default {
 			this.getNewMessages()
 		})
 	},
+
 	beforeDestroy() {
 		EventBus.$off('scrollChatToBottom', this.handleScrollChatToBottomEvent)
 		this.cancelLookForNewMessages()
@@ -334,6 +338,7 @@ export default {
 						id: this.conversation.lastReadMessage,
 					})
 
+					this.lastReadMessage = this.conversation.lastReadMessage
 					this.getMessages(true)
 				} else {
 					this.getMessages(false)
@@ -363,7 +368,10 @@ export default {
 					return
 				}
 
-				this.getNewMessages()
+				const followInNewMessages = this.conversation.lastMessage
+					&& this.conversation.lastReadMessage === this.conversation.lastMessage.id
+
+				this.getNewMessages(followInNewMessages)
 			})
 		},
 
@@ -424,8 +432,11 @@ export default {
 
 		/**
 		 * Creates a long polling request for a new message.
+		 * @param {boolean} scrollToBottom Whether we should try to automatically scroll to the bottom
 		 */
-		async getNewMessages() {
+		async getNewMessages(scrollToBottom) {
+			scrollToBottom = scrollToBottom === undefined ? true : scrollToBottom
+
 			// Clear previous requests if there's one pending
 			this.cancelLookForNewMessages('canceled')
 			// Get a new cancelable request function and cancel function pair
@@ -455,7 +466,7 @@ export default {
 				})
 
 				// Scroll to the last message if sticky
-				if (this.isSticky) {
+				if (scrollToBottom && this.isSticky) {
 					this.scrollToBottom()
 				}
 			} catch (exception) {

@@ -25,6 +25,7 @@ the main body of the message as well as a quote.
 </docs>
 
 <template>
+	<div>
 	<div
 		class="message"
 		:class="{'hover': showActions && !isSystemMessage, 'system' : isSystemMessage}"
@@ -69,6 +70,12 @@ the main body of the message as well as a quote.
 				</Actions>
 			</div>
 		</div>
+	</div>
+
+	<div v-if="lastReadMessage === id"
+		class="unread-message-marker">
+		{{ t('spreed', 'Unread messages') }}
+	</div>
 	</div>
 </template>
 
@@ -194,6 +201,14 @@ export default {
 		 * The parent message's id.
 		 */
 		parent: {
+			type: Number,
+			default: 0,
+		},
+
+		/**
+		 * Id of the last read message when the chat was opened
+		 */
+		lastReadMessage: {
 			type: Number,
 			default: 0,
 		},
@@ -408,6 +423,15 @@ export default {
 .message:not(.system) {
 	padding: 12px 4px 12px 8px;
 	margin: -6px 0;
+}
+
+.unread-message-marker {
+	background-color: var(--color-primary-light);
+	color: var(--color-primary-text);
+	margin: 10px 0;
+	padding: 10px;
+	border-radius: var(--border-radius);
+	text-align: center;
 }
 
 .hover {
