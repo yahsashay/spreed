@@ -44,7 +44,7 @@ get the messagesList array and loop through the list to generate the messages.
 			:style="{ height: item.height + 'px' }"
 			v-bind="item"
 			:messages="item"
-			:last-read-message="lastReadMessage"
+			:last-read-message="unreadMessageMarkerId"
 			@deleteMessage="handleDeleteMessage" />
 		<template v-if="!messagesGroupedByAuthor.length">
 			<LoadingMessage
@@ -201,6 +201,13 @@ export default {
 		chatIdentifier() {
 			return this.token + ':' + this.isParticipant + ':' + this.isInLobby
 		},
+
+		unreadMessageMarkerId() {
+			if (this.lastReadMessage !== this.$store.getters.getLastKnownMessageId(this.token)) {
+				return this.lastReadMessage
+			}
+			return 0
+		},
 	},
 
 	watch: {
@@ -328,6 +335,7 @@ export default {
 
 		handleStartGettingMessagesPreconditions() {
 			if (this.token && this.isParticipant && !this.isInLobby) {
+				this.lastReadMessage = this.conversation.lastReadMessage
 				if (this.$store.getters.getFirstKnownMessageId(this.token) === null) {
 					this.$store.dispatch('setFirstKnownMessageId', {
 						token: this.token,
@@ -338,7 +346,6 @@ export default {
 						id: this.conversation.lastReadMessage,
 					})
 
-					this.lastReadMessage = this.conversation.lastReadMessage
 					this.getMessages(true)
 				} else {
 					this.getMessages(false)

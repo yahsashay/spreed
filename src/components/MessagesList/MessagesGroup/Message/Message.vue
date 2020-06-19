@@ -73,8 +73,8 @@ the main body of the message as well as a quote.
 	</div>
 
 	<div v-if="lastReadMessage === id"
-		class="unread-message-marker">
-		{{ t('spreed', 'Unread messages') }}
+		class="new-message-marker">
+		<span>{{ t('spreed', 'New messages') }}</span>
 	</div>
 	</div>
 </template>
@@ -425,13 +425,16 @@ export default {
 	margin: -6px 0;
 }
 
-.unread-message-marker {
-	background-color: var(--color-primary-light);
-	color: var(--color-primary-text);
-	margin: 10px 0;
-	padding: 10px;
-	border-radius: var(--border-radius);
+.new-message-marker {
+	margin: 20px 0;
 	text-align: center;
+
+	span {
+		background-color: var(--color-primary-light);
+		color: var(--color-text-lighter);
+		padding: 10px  20px;
+		border-radius: var(--border-radius);
+	}
 }
 
 .hover {
