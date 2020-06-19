@@ -120,6 +120,32 @@ class RoomService {
 		return $room;
 	}
 
+	/**
+	 * @param Room $room
+	 * @param string $name
+	 * @throws InvalidArgumentException on too long or empty names
+	 * @throws InvalidArgumentException when the name can not be set for this room type
+	 */
+	public function setConversationName(Room $room, string $name): void {
+		$name = trim($name);
+		if ($name === '' || isset($name[255])) {
+			throw new InvalidArgumentException('name');
+		}
+
+		if ($room->getName() === $name) {
+			throw new InvalidArgumentException('same_name');
+		}
+
+		if (!\in_array($room->getType(), [
+			Room::GROUP_CALL,
+			Room::PUBLIC_CALL,
+		], true)) {
+			throw new InvalidArgumentException('type');
+		}
+
+		$room->setName($name);
+	}
+
 	public function prepareConversationName(string $objectName): string {
 		return rtrim(mb_substr(ltrim($objectName), 0, 64));
 	}

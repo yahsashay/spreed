@@ -66,39 +66,6 @@ trait TRoomCommand {
 	}
 
 	/**
-	 * @param Room   $room
-	 * @param string $name
-	 *
-	 * @throws InvalidArgumentException
-	 */
-	protected function setRoomName(Room $room, string $name): void {
-		$name = trim($name);
-		if ($name === $room->getName()) {
-			return;
-		}
-
-		if (!$this->validateRoomName($name)) {
-			throw new InvalidArgumentException('Invalid room name.');
-		}
-
-		if (!$room->setName($name)) {
-			throw new InvalidArgumentException('Unable to change room name.');
-		}
-	}
-
-	/**
-	 * @param string $name
-	 *
-	 * @return bool
-	 *
-	 * @throws InvalidArgumentException
-	 */
-	protected function validateRoomName(string $name): bool {
-		$name = trim($name);
-		return (($name !== '') && !isset($name[255]));
-	}
-
-	/**
 	 * @param Room $room
 	 * @param bool $public
 	 *

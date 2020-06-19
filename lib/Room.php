@@ -395,9 +395,6 @@ class Room {
 	 */
 	public function setName(string $newName): bool {
 		$oldName = $this->getName();
-		if ($newName === $oldName) {
-			return false;
-		}
 
 		$event = new ModifyRoomEvent($this, 'name', $newName, $oldName);
 		$this->dispatcher->dispatch(self::EVENT_BEFORE_NAME_SET, $event);

@@ -224,6 +224,92 @@ class RoomServiceTest extends TestCase {
 		$this->assertSame($room, $this->service->createConversation($type, $name, $owner, $objectType, $objectId));
 	}
 
+
+	/**
+	 * @dataProvider dataCreateConversationInvalidNames
+	 * @param string $name
+	 */
+	public function testSetConversationNameInvalidNames(string $name): void {
+		$room = $this->createMock(Room::class);
+		$room->expects($this->never())
+			->method('setName');
+
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('name');
+		$this->service->setConversationName($room, $name);
+	}
+
+	public function testSetConversationNameSameName(): void {
+		$room = $this->createMock(Room::class);
+		$room->expects($this->never())
+			->method('setName');
+		$room->expects($this->once())
+			->method('getName')
+			->willReturn('123');
+
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('same_name');
+		$this->service->setConversationName($room, '123');
+	}
+
+	public function dataSetConversationNameInvalidTypes(): array {
+		return [
+			[Room::UNKNOWN_CALL],
+			[Room::ONE_TO_ONE_CALL],
+			[Room::CHANGELOG_CONVERSATION],
+			[5],
+		];
+	}
+
+	/**
+	 * @dataProvider dataSetConversationNameInvalidTypes
+	 * @param int $type
+	 */
+	public function testSetConversationNameInvalidTypes(int $type): void {
+		$room = $this->createMock(Room::class);
+		$room->expects($this->never())
+			->method('setName');
+		$room->expects($this->once())
+			->method('getName')
+			->willReturn('123');
+
+		$room->expects($this->once())
+			->method('getType')
+			->willReturn($type);
+
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('type');
+		$this->service->setConversationName($room, '456');
+	}
+
+
+	public function dataSetConversationName(): array {
+		return [
+			[Room::GROUP_CALL],
+			[Room::PUBLIC_CALL],
+		];
+	}
+
+	/**
+	 * @dataProvider dataSetConversationName
+	 * @param int $type
+	 */
+	public function testSetConversationName(int $type): void {
+		$room = $this->createMock(Room::class);
+		$room->expects($this->once())
+			->method('setName')
+			->with('456');
+		$room->expects($this->once())
+			->method('getName')
+			->willReturn('123');
+
+		$room->expects($this->once())
+			->method('getType')
+			->willReturn($type);
+
+		$this->service->setConversationName($room, '456');
+	}
+
 	public function dataPrepareConversationName(): array {
 		return [
 			['', ''],

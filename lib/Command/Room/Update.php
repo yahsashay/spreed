@@ -106,7 +106,11 @@ class Update extends Base {
 
 		try {
 			if ($name !== null) {
-				$this->setRoomName($room, $name);
+				try {
+					$this->roomService->setConversationName($room, $name);
+				} catch (\InvalidArgumentException $e) {
+					throw new InvalidArgumentException('Invalid room name.');
+				}
 			}
 
 			if ($public !== null) {

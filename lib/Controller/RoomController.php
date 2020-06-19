@@ -789,17 +789,12 @@ class RoomController extends AEnvironmentAwareController {
 	 * @return DataResponse
 	 */
 	public function renameRoom(string $roomName): DataResponse {
-		if ($this->room->getType() === Room::ONE_TO_ONE_CALL) {
+		try {
+			$this->roomService->setConversationName($this->room, $roomName);
+		} catch (\InvalidArgumentException $e) {
 			return new DataResponse([], Http::STATUS_BAD_REQUEST);
 		}
 
-		$roomName = trim($roomName);
-
-		if ($roomName === '' || strlen($roomName) > 200) {
-			return new DataResponse([], Http::STATUS_BAD_REQUEST);
-		}
-
-		$this->room->setName($roomName);
 		return new DataResponse();
 	}
 

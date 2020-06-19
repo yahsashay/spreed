@@ -206,7 +206,7 @@ class BackendNotifierTest extends \Test\TestCase {
 	}
 
 	public function testRoomInvite() {
-		$room = $this->manager->createRoom(Room::PUBLIC_CALL);
+		$room = $this->manager->createRoom(Room::PUBLIC_CALL, 'a');
 		$room->addUsers([
 			'userId' => $this->userId,
 		]);
@@ -233,7 +233,7 @@ class BackendNotifierTest extends \Test\TestCase {
 	}
 
 	public function testRoomDisinvite() {
-		$room = $this->manager->createRoom(Room::PUBLIC_CALL);
+		$room = $this->manager->createRoom(Room::PUBLIC_CALL, 'a');
 		$room->addUsers([
 			'userId' => $this->userId,
 		]);
@@ -266,7 +266,7 @@ class BackendNotifierTest extends \Test\TestCase {
 	}
 
 	public function testRoomNameChanged() {
-		$room = $this->manager->createRoom(Room::PUBLIC_CALL);
+		$room = $this->manager->createRoom(Room::PUBLIC_CALL, 'a');
 		$room->setName('Test room');
 
 		$this->assertMessageWasSent($room, [
@@ -287,7 +287,7 @@ class BackendNotifierTest extends \Test\TestCase {
 	}
 
 	public function testRoomPasswordChanged() {
-		$room = $this->manager->createRoom(Room::PUBLIC_CALL);
+		$room = $this->manager->createRoom(Room::PUBLIC_CALL, 'a');
 		$room->setPassword('password');
 
 		$this->assertMessageWasSent($room, [
@@ -308,7 +308,7 @@ class BackendNotifierTest extends \Test\TestCase {
 	}
 
 	public function testRoomTypeChanged() {
-		$room = $this->manager->createRoom(Room::PUBLIC_CALL);
+		$room = $this->manager->createRoom(Room::PUBLIC_CALL, 'a');
 		$room->setType(Room::GROUP_CALL);
 
 		$this->assertMessageWasSent($room, [
@@ -329,7 +329,7 @@ class BackendNotifierTest extends \Test\TestCase {
 	}
 
 	public function testRoomReadOnlyChanged() {
-		$room = $this->manager->createRoom(Room::PUBLIC_CALL);
+		$room = $this->manager->createRoom(Room::PUBLIC_CALL, 'a');
 		$room->setReadOnly(Room::READ_ONLY);
 
 		$this->assertMessageWasSent($room, [
@@ -350,7 +350,7 @@ class BackendNotifierTest extends \Test\TestCase {
 	}
 
 	public function testRoomLobbyStateChanged() {
-		$room = $this->manager->createRoom(Room::PUBLIC_CALL);
+		$room = $this->manager->createRoom(Room::PUBLIC_CALL, 'a');
 		$room->setLobby(Webinary::LOBBY_NON_MODERATORS, null);
 
 		$this->assertMessageWasSent($room, [
@@ -371,7 +371,7 @@ class BackendNotifierTest extends \Test\TestCase {
 	}
 
 	public function testRoomDelete() {
-		$room = $this->manager->createRoom(Room::PUBLIC_CALL);
+		$room = $this->manager->createRoom(Room::PUBLIC_CALL, 'a');
 		$room->addUsers([
 			'userId' => $this->userId,
 		]);
@@ -388,7 +388,7 @@ class BackendNotifierTest extends \Test\TestCase {
 	}
 
 	public function testRoomInCallChanged() {
-		$room = $this->manager->createRoom(Room::PUBLIC_CALL);
+		$room = $this->manager->createRoom(Room::PUBLIC_CALL, 'a');
 		$userSession = 'user-session';
 		$room->addUsers([
 			'userId' => $this->userId,
@@ -494,7 +494,7 @@ class BackendNotifierTest extends \Test\TestCase {
 
 		$this->dispatcher->addListener(Room::EVENT_BEFORE_SIGNALING_PROPERTIES, $listener);
 
-		$room = $this->manager->createRoom(Room::PUBLIC_CALL);
+		$room = $this->manager->createRoom(Room::PUBLIC_CALL, 'a');
 		$this->controller->clearRequests();
 		$room->setName('Test room');
 
@@ -518,7 +518,7 @@ class BackendNotifierTest extends \Test\TestCase {
 	}
 
 	public function testParticipantsTypeChanged() {
-		$room = $this->manager->createRoom(Room::PUBLIC_CALL);
+		$room = $this->manager->createRoom(Room::PUBLIC_CALL, 'a');
 		$userSession = 'user-session';
 		$room->addUsers([
 			'userId' => $this->userId,
