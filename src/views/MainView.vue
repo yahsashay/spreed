@@ -66,6 +66,13 @@ export default {
 		},
 
 		showChatInSidebar() {
+			console.log('showChatInSidebar')
+			console.log(SessionStorage.getItem('joined_conversation'))
+			console.log(this.token)
+			console.log(this.participant.inCall)
+			console.log(SessionStorage.getItem('joined_conversation') === this.token
+				&& this.participant.inCall !== PARTICIPANT.CALL_FLAG.DISCONNECTED)
+
 			return SessionStorage.getItem('joined_conversation') === this.token
 				&& this.participant.inCall !== PARTICIPANT.CALL_FLAG.DISCONNECTED
 		},

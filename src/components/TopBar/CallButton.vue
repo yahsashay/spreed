@@ -106,7 +106,14 @@ export default {
 		},
 
 		isInCall() {
-			return SessionStorage.getItem('joined_conversation') === this.token
+			console.log('CallButton::isInCall')
+			console.log(this.sessionJoinedConversation)
+			// console.log(this.token)
+			// console.log(this.participant.inCall)
+			// console.log(SessionStorage.getItem('joined_conversation') === this.token
+			// && this.participant.inCall !== PARTICIPANT.CALL_FLAG.DISCONNECTED)
+
+			return this.sessionJoinedConversation === this.token
 				&& this.participant.inCall !== PARTICIPANT.CALL_FLAG.DISCONNECTED
 		},
 
@@ -185,6 +192,17 @@ export default {
 		showLeaveCallButton() {
 			return this.conversation.readOnly === CONVERSATION.STATE.READ_WRITE
 				&& this.isInCall
+		},
+
+		sessionJoinedConversation() {
+			return SessionStorage.getItem('joined_conversation')
+		},
+	},
+
+	watch: {
+		sessionJoinedConversation(token) {
+			console.log('sessionJoinedConversation')
+			console.log(token)
 		},
 	},
 
