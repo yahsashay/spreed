@@ -35,6 +35,7 @@ import fileUploadStore from './fileUploadStore'
 import newGroupConversationStore from './newGroupConversationStore'
 import callViewStore from './callViewStore'
 import talkHashStore from './talkHashStore'
+import soundsStore from './soundsStore'
 
 Vue.use(Vuex)
 
@@ -55,6 +56,7 @@ export default new Store({
 		newGroupConversationStore,
 		callViewStore,
 		talkHashStore,
+		soundsStore,
 	},
 
 	mutations,

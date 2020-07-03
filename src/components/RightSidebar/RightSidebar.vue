@@ -65,6 +65,13 @@
 			:name="t('spreed', 'Settings')"
 			icon="icon-settings">
 			<SetGuestUsername />
+			<div>
+				<input id="playSounds"
+					v-model="playSounds"
+					type="checkbox"
+					class="checkbox">
+				<label for="playSounds">{{ t('settings', 'Play sounds when participants join a call or drop out') }}</label>
+			</div>
 		</AppSidebarTab>
 	</AppSidebar>
 </template>
@@ -83,6 +90,8 @@ import {
 } from '../../services/conversationsService'
 import isInLobby from '../../mixins/isInLobby'
 import SetGuestUsername from '../SetGuestUsername'
+import { setPlaySounds } from '../../services/settingsService'
+import { showError } from '@nextcloud/dialogs'
 
 export default {
 	name: 'RightSidebar',
@@ -186,6 +195,20 @@ export default {
 		},
 		isRenamingConversation() {
 			return this.$store.getters.isRenamingConversation
+		},
+
+		playSounds: {
+			get() {
+				return this.$store.getters.playSounds
+			},
+			set(status) {
+				this.$store.commit('setPlaySounds', status)
+				try {
+					setPlaySounds(status)
+				} catch (e) {
+					showError(t('spreed', 'Failed to save sounds setting'))
+				}
+			},
 		},
 	},
 

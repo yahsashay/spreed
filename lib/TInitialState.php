@@ -82,6 +82,11 @@ trait TInitialState {
 			$appManager->isEnabledForUser('circles', $user)
 		);
 
+		$this->initialStateService->provideInitialState(
+			'talk', 'play_sounds',
+			$this->serverConfig->getUserValue($user->getUID(), 'spreed', 'play_sounds', 'yes') === 'yes'
+		);
+
 		$attachmentFolder = $this->talkConfig->getAttachmentFolder($user->getUID());
 
 		if ($attachmentFolder) {
@@ -120,6 +125,11 @@ trait TInitialState {
 		$this->initialStateService->provideInitialState(
 			'talk', 'attachment_folder',
 			''
+		);
+
+		$this->initialStateService->provideInitialState(
+			'talk', 'play_sounds',
+			false
 		);
 	}
 }

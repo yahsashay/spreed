@@ -84,12 +84,22 @@
 		</ul>
 
 		<AppNavigationSettings>
-			<label>{{ t('spreed', 'Default location for attachments') }}</label>
-			<input
-				type="text"
-				:value="attachmentFolder"
-				:disabled="attachmentFolderLoading"
-				@click="selectAttachmentFolder">
+			<div>
+				<input id="playSounds"
+					v-model="playSounds"
+					type="checkbox"
+					class="checkbox">
+				<label for="playSounds">{{ t('settings', 'Play sounds when participants join a call or drop out') }}</label>
+			</div>
+
+			<div>
+				<label>{{ t('spreed', 'Default location for attachments') }}</label>
+				<input
+					type="text"
+					:value="attachmentFolder"
+					:disabled="attachmentFolderLoading"
+					@click="selectAttachmentFolder">
+			</div>
 		</AppNavigationSettings>
 	</AppNavigation>
 </template>
@@ -108,7 +118,10 @@ import {
 	createGroupConversation, createOneToOneConversation,
 	searchPossibleConversations,
 } from '../../services/conversationsService'
-import { setAttachmentFolder } from '../../services/settingsService'
+import {
+	setAttachmentFolder,
+	setPlaySounds,
+} from '../../services/settingsService'
 import { CONVERSATION } from '../../constants'
 import { loadState } from '@nextcloud/initial-state'
 import NewGroupConversation from './NewGroupConversation/NewGroupConversation'
@@ -144,6 +157,21 @@ export default {
 	},
 
 	computed: {
+		// Local settings
+		playSounds: {
+			get() {
+				return this.$store.getters.playSounds
+			},
+			set(status) {
+				this.$store.commit('setPlaySounds', status)
+				try {
+					setPlaySounds(status)
+				} catch (e) {
+					showError(t('spreed', 'Failed to save sounds setting'))
+				}
+			},
+		},
+
 		conversationsList() {
 			return this.$store.getters.conversationsList
 		},

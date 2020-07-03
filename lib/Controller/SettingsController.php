@@ -97,6 +97,10 @@ class SettingsController extends OCSController {
 			return false;
 		}
 
+		if ($setting === 'play_sounds') {
+			return $value === 'yes' || $value === 'no';
+		}
+
 		return false;
 	}
 }
