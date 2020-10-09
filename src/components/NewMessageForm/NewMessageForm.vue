@@ -323,6 +323,10 @@ export default {
 					possibleMention.icon = 'icon-group-forced-white'
 				} else if (possibleMention.source === 'guests') {
 					possibleMention.icon = 'icon-user-forced-white'
+				} else {
+					// The avatar is automatically shown for users, but an icon
+					// is nevertheless required as fallback.
+					possibleMention.icon = 'icon-user-forced-white'
 				}
 
 				// Convert status properties to an object.
