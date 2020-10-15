@@ -621,7 +621,6 @@ export default {
 .scroller {
 	flex: 1 0;
 	overflow-y: auto;
-	scroll-behavior: smooth;
 	&__loading {
 		height: 50px;
 		display: flex;
