@@ -55,7 +55,7 @@ get the messagesList array and loop through the list to generate the messages.
 			<button v-show="!isScrolledToBottom"
 				:aria-label="scrollToBottomAriaLabel"
 				class="scroll-to-bottom"
-				@click="scrollToBottom">
+				@click="smoothScrollToBottom">
 				<ChevronDown decorative
 					:size="24" />
 			</button>
@@ -232,12 +232,14 @@ export default {
 	mounted() {
 		this.scrollToBottom()
 		EventBus.$on('scrollChatToBottom', this.handleScrollChatToBottomEvent)
-
+		EventBus.$on('smoothScrollChatToBottom', this.smoothScrollToBottom)
 		subscribe('networkOffline', this.handleNetworkOffline)
 		subscribe('networkOnline', this.handleNetworkOnline)
 	},
 	beforeDestroy() {
 		EventBus.$off('scrollChatToBottom', this.handleScrollChatToBottomEvent)
+		EventBus.$off('smoothScrollChatToBottom', this.smoothScrollToBottom)
+
 		this.cancelLookForNewMessages()
 		// Prevent further lookForNewMessages requests after the component was
 		// destroyed.
@@ -480,7 +482,7 @@ export default {
 
 				// Scroll to the last message if sticky
 				if (this.isSticky) {
-					this.scrollToBottom()
+					this.smoothScrollToBottom()
 				}
 			} catch (exception) {
 				if (Axios.isCancel(exception)) {
@@ -565,7 +567,15 @@ export default {
 				this.isScrolledToBottom = true
 			}
 		},
-
+		smoothScrollToBottom() {
+			this.$nextTick(function() {
+				this.scroller.scrollTo({
+					top: this.scroller.scrollHeight,
+					behavior: 'smooth',
+					 })
+			})
+			this.isScrolledToBottom = true
+		},
 		/**
 		 * Scrolls to the bottom of the list.
 		 */
@@ -621,6 +631,7 @@ export default {
 .scroller {
 	flex: 1 0;
 	overflow-y: auto;
+	overflow-x: hidden;
 	&__loading {
 		height: 50px;
 		display: flex;
