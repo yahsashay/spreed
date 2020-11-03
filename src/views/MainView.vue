@@ -84,6 +84,16 @@ export default {
 		},
 	},
 
+	created() {
+		// hacks to pre-set preferences, they will be picked up by LocalMediaModel later
+		if (this.$route.query.audio !== null) {
+			localStorage.setItem('audioDisabled_' + this.token, this.$route.query.audio !== '0')
+		}
+		if (this.$route.query.video !== null) {
+			localStorage.setItem('videoDisabled_' + this.token, this.$route.query.video !== '0')
+		}
+	},
+
 }
 </script>
 
