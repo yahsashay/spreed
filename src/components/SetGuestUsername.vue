@@ -91,7 +91,7 @@ export default {
 	mounted() {
 		// FIXME use @nextcloud/browser-storage or OCP when decided
 		// https://github.com/nextcloud/nextcloud-browser-storage/issues/3
-		this.guestUserName = localStorage.getItem('nick')
+		this.guestUserName = localStorage.getItem('nick') || this.$route.query.nick
 		if (this.guestUserName && this.actorDisplayName !== this.guestUserName) {
 			// Browser storage has a name, so we use that.
 			if (this.actorId) {

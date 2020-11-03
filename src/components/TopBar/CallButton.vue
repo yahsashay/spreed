@@ -70,6 +70,7 @@ export default {
 	data() {
 		return {
 			loading: false,
+			autoJoined: false,
 		}
 	},
 
@@ -222,6 +223,20 @@ export default {
 			})
 			this.loading = false
 		},
+	},
+
+	watch: {
+		showStartCallButton() {
+			if (this.showStartCallButton && this.$route.query.autojoin && !this.autoJoined) {
+				console.log('Automatically joining call')
+				// prevent redoing it again
+				this.autoJoined = true
+				// TODO: clear URL arg
+				this.$nextTick(() => {
+					this.joinCall()
+				})
+			}
+		}
 	},
 }
 </script>
