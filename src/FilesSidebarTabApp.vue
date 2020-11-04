@@ -39,6 +39,7 @@
 			</button>
 		</div>
 		<template v-else>
+			<UploadEditor />
 			<CallButton class="call-button" />
 			<ChatView :token="token" />
 		</template>
@@ -60,6 +61,7 @@ import { signalingKill } from './utils/webrtc/index'
 import { getCurrentUser } from '@nextcloud/auth'
 import { loadState } from '@nextcloud/initial-state'
 import Axios from '@nextcloud/axios'
+import UploadEditor from './components/UploadEditor'
 import CallButton from './components/TopBar/CallButton'
 import ChatView from './components/ChatView'
 import duplicateSessionHandler from './mixins/duplicateSessionHandler'
@@ -73,6 +75,7 @@ export default {
 	components: {
 		CallButton,
 		ChatView,
+		UploadEditor,
 	},
 
 	mixins: [
