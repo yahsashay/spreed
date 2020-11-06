@@ -25,18 +25,8 @@
 		<svg class="placeholder-gradient">
 			<defs>
 				<linearGradient id="placeholder-gradient">
-					<stop offset="0%" :stop-color="light">
-						<animate attributeName="stop-color"
-							:values="`${light}; ${light}; ${dark}; ${dark}; ${light}`"
-							dur="2s"
-							repeatCount="indefinite" />
-					</stop>
-					<stop offset="100%" :stop-color="dark">
-						<animate attributeName="stop-color"
-							:values="`${dark}; ${light}; ${light}; ${dark}; ${dark}`"
-							dur="2s"
-							repeatCount="indefinite" />
-					</stop>
+					<stop offset="0%" :stop-color="light" />
+					<stop offset="100%" :stop-color="dark" />
 				</linearGradient>
 			</defs>
 		</svg>
@@ -110,6 +100,9 @@ export default {
 	ul {
 		width: 100%;
 		position: relative;
+		animation: pulse 2s;
+		animation-iteration-count: infinite;
+		translate: translateZ(0);
 	}
 
 	.placeholder-gradient {
@@ -184,6 +177,18 @@ export default {
 
 		&-line-four {
 			y: 65px;
+		}
+	}
+
+	@keyframes pulse {
+		0% {
+			opacity: 1;
+		}
+		50% {
+			opacity: .3;
+		}
+		100% {
+			opacity: 1;
 		}
 	}
 
