@@ -65,6 +65,8 @@
 				:id="conversation.token"
 				type="room"
 				:name="conversation.displayName" />
+			<LinkShareSettings
+				v-if="token && canFullModerate && showModerationOptions" />
 			<div id="app-settings">
 				<div id="app-settings-header">
 					<button class="settings-button" @click="showSettings">
@@ -86,11 +88,12 @@ import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
 import ChatView from '../ChatView'
 import { CollectionList } from 'nextcloud-vue-collections'
 import BrowserStorage from '../../services/BrowserStorage'
-import { CONVERSATION, WEBINAR, PARTICIPANT } from '../../constants'
+import { CONVERSATION, PARTICIPANT } from '../../constants'
 import ParticipantsTab from './Participants/ParticipantsTab'
 import MatterbridgeSettings from './Matterbridge/MatterbridgeSettings'
 import isInLobby from '../../mixins/isInLobby'
 import SetGuestUsername from '../SetGuestUsername'
+import LinkShareSettings from './Settings/LinkShareSettings'
 
 export default {
 	name: 'RightSidebar',
@@ -102,6 +105,7 @@ export default {
 		ParticipantsTab,
 		SetGuestUsername,
 		MatterbridgeSettings,
+		LinkShareSettings,
 	},
 
 	mixins: [
@@ -140,18 +144,7 @@ export default {
 			return this.$store.getters.getToken()
 		},
 		conversation() {
-			if (this.$store.getters.conversation(this.token)) {
-				return this.$store.getters.conversation(this.token)
-			}
-			return {
-				token: '',
-				displayName: '',
-				isFavorite: false,
-				hasPassword: false,
-				type: CONVERSATION.TYPE.PUBLIC,
-				lobbyState: WEBINAR.LOBBY.NONE,
-				lobbyTimer: 0,
-			}
+			return this.$store.getters.conversation(this.token) || this.$store.getters.dummyConversation
 		},
 
 		getUserId() {
@@ -186,6 +179,10 @@ export default {
 
 		canModerate() {
 			return this.conversation.type !== CONVERSATION.TYPE.ONE_TO_ONE && (this.canFullModerate || this.participantType === PARTICIPANT.TYPE.GUEST_MODERATOR)
+		},
+
+		showModerationOptions() {
+			return this.conversation.type !== CONVERSATION.TYPE.ONE_TO_ONE && this.canModerate
 		},
 
 		/**

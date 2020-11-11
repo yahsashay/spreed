@@ -81,14 +81,6 @@
 					@click="handleRenameConversation">
 					{{ t('spreed', 'Rename conversation') }}
 				</ActionButton>
-				<ActionSeparator
-					v-if="canFullModerate" />
-				<ActionCheckbox
-					v-if="canFullModerate"
-					:checked="isSharedPublicly"
-					@change="toggleGuests">
-					{{ t('spreed', 'Share link') }}
-				</ActionCheckbox>
 			</template>
 			<ActionButton
 				v-if="!isOneToOneConversation"
@@ -97,28 +89,8 @@
 				@click="handleCopyLink">
 				{{ t('spreed', 'Copy link') }}
 			</ActionButton>
-			<!-- password -->
 			<template
 				v-if="showModerationOptions">
-				<ActionCheckbox
-					v-if="isSharedPublicly"
-					class="share-link-password-checkbox"
-					:checked="isPasswordProtected"
-					@check="handlePasswordEnable"
-					@uncheck="handlePasswordDisable">
-					{{ t('spreed', 'Password protection') }}
-				</ActionCheckbox>
-				<ActionInput
-					v-show="isEditingPassword"
-					class="share-link-password"
-					icon="icon-password"
-					type="password"
-					:value.sync="password"
-					autocomplete="new-password"
-					@submit="handleSetNewPassword">
-					{{ t('spreed', 'Enter a password') }}
-				</ActionInput>
-				<ActionSeparator />
 				<ActionCheckbox
 					:checked="isReadOnly"
 					:disabled="readOnlyStateLoading"
@@ -186,9 +158,6 @@ import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
 import ActionSeparator from '@nextcloud/vue/dist/Components/ActionSeparator'
 import { CONVERSATION, WEBINAR, PARTICIPANT } from '../../constants'
-import {
-	setConversationPassword,
-} from '../../services/conversationsService'
 import { generateUrl } from '@nextcloud/router'
 import { callParticipantCollection } from '../../utils/webrtc/index'
 
@@ -217,10 +186,6 @@ export default {
 		return {
 			showLayoutHint: false,
 			hintDismissed: false,
-			// The conversation's password
-			password: '',
-			// Switch for the password-editing operation
-			isEditingPassword: false,
 			lobbyTimerLoading: false,
 			readOnlyStateLoading: false,
 		}
@@ -305,22 +270,8 @@ export default {
 		token() {
 			return this.$store.getters.getToken()
 		},
-		isSharedPublicly() {
-			return this.conversation.type === CONVERSATION.TYPE.PUBLIC
-		},
 		conversation() {
-			if (this.$store.getters.conversation(this.token)) {
-				return this.$store.getters.conversation(this.token)
-			}
-			return {
-				token: '',
-				displayName: '',
-				isFavorite: false,
-				hasPassword: false,
-				type: CONVERSATION.TYPE.PUBLIC,
-				lobbyState: WEBINAR.LOBBY.NONE,
-				lobbyTimer: 0,
-			}
+			return this.$store.getters.conversation(this.token) || this.$store.getters.dummyConversation
 		},
 		linkToConversation() {
 			if (this.token !== '') {
@@ -338,9 +289,6 @@ export default {
 		},
 		isReadOnly() {
 			return this.conversation.readOnly === CONVERSATION.STATE.READ_ONLY
-		},
-		isPasswordProtected() {
-			return this.conversation.hasPassword
 		},
 		lobbyTimer() {
 			// A timestamp of 0 means that there is no lobby, but it would be
@@ -454,12 +402,6 @@ export default {
 			this.$store.dispatch('selectedVideoPeerId', null)
 			this.showLayoutHint = false
 		},
-		async toggleGuests() {
-			await this.$store.dispatch('toggleGuests', {
-				token: this.token,
-				allowGuests: this.conversation.type !== CONVERSATION.TYPE.PUBLIC,
-			})
-		},
 
 		async toggleLobby() {
 			await this.$store.dispatch('toggleLobby', {
@@ -508,23 +450,6 @@ export default {
 			this.readOnlyStateLoading = false
 		},
 
-		async handlePasswordDisable() {
-			// disable the password protection for the current conversation
-			if (this.conversation.hasPassword) {
-				await setConversationPassword(this.token, '')
-			}
-			this.password = ''
-			this.isEditingPassword = false
-		},
-		async handlePasswordEnable() {
-			this.isEditingPassword = true
-		},
-
-		async handleSetNewPassword() {
-			await setConversationPassword(this.token, this.password)
-			this.password = ''
-			this.isEditingPassword = false
-		},
 		async handleCopyLink() {
 			try {
 				await this.$copyText(this.linkToConversation)

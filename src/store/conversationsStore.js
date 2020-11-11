@@ -33,6 +33,16 @@ import {
 import { getCurrentUser } from '@nextcloud/auth'
 import { CONVERSATION, WEBINAR } from '../constants'
 
+const DUMMY_CONVERSATION = {
+	token: '',
+	displayName: '',
+	isFavorite: false,
+	hasPassword: false,
+	type: CONVERSATION.TYPE.PUBLIC,
+	lobbyState: WEBINAR.LOBBY.NONE,
+	lobbyTimer: 0,
+}
+
 const getDefaultState = () => {
 	return {
 		conversations: {
@@ -55,6 +65,7 @@ const getters = {
 	 * @returns {object} The conversation object
 	 */
 	conversation: state => token => state.conversations[token],
+	dummyConversation: state => Object.assign({}, DUMMY_CONVERSATION),
 }
 
 const mutations = {
