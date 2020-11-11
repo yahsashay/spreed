@@ -29,6 +29,7 @@
 		:starred="isFavorited"
 		:title-editable="canModerate && isRenamingConversation"
 		:class="'active-tab-' + activeTab"
+		:active="activeTab"
 		@update:active="handleUpdateActive"
 		@update:starred="onFavoriteChange"
 		@update:title="handleUpdateTitle"
@@ -116,7 +117,6 @@ export default {
 
 	data() {
 		return {
-			activeTab: 'participants',
 			contactsLoading: false,
 			// The conversation name (while editing)
 			conversationName: '',
@@ -129,6 +129,9 @@ export default {
 	computed: {
 		show() {
 			return this.$store.getters.getSidebarStatus
+		},
+		activeTab() {
+			return this.$store.getters.sidebarActiveTab
 		},
 		opened() {
 			return !!this.token && !this.isInLobby && this.show
@@ -221,7 +224,7 @@ export default {
 		},
 
 		handleUpdateActive(active) {
-			this.activeTab = active
+			this.$store.dispatch('setSidebarActiveTab', active)
 		},
 
 		/**
