@@ -67,6 +67,8 @@
 				:name="conversation.displayName" />
 			<LinkShareSettings
 				v-if="token && canFullModerate && showModerationOptions" />
+			<ModerationSettings
+				v-if="token && showModerationOptions" />
 			<div id="app-settings">
 				<div id="app-settings-header">
 					<button class="settings-button" @click="showSettings">
@@ -94,6 +96,7 @@ import MatterbridgeSettings from './Matterbridge/MatterbridgeSettings'
 import isInLobby from '../../mixins/isInLobby'
 import SetGuestUsername from '../SetGuestUsername'
 import LinkShareSettings from './Settings/LinkShareSettings'
+import ModerationSettings from './Settings/ModerationSettings'
 
 export default {
 	name: 'RightSidebar',
@@ -106,6 +109,7 @@ export default {
 		SetGuestUsername,
 		MatterbridgeSettings,
 		LinkShareSettings,
+		ModerationSettings,
 	},
 
 	mixins: [

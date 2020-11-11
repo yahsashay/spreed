@@ -92,27 +92,6 @@
 			<template
 				v-if="showModerationOptions">
 				<ActionCheckbox
-					:checked="isReadOnly"
-					:disabled="readOnlyStateLoading"
-					@change="toggleReadOnly">
-					{{ t('spreed', 'Lock conversation') }}
-				</ActionCheckbox>
-				<ActionCheckbox
-					:checked="hasLobbyEnabled"
-					@change="toggleLobby">
-					{{ t('spreed', 'Enable lobby') }}
-				</ActionCheckbox>
-				<ActionInput
-					v-if="hasLobbyEnabled"
-					icon="icon-calendar-dark"
-					type="datetime-local"
-					v-bind="dateTimePickerAttrs"
-					:value="lobbyTimer"
-					:disabled="lobbyTimerLoading"
-					@change="setLobbyTimer">
-					{{ t('spreed', 'Start time (optional)') }}
-				</ActionInput>
-				<ActionCheckbox
 					:checked="hasSIPEnabled"
 					@change="toggleSIPEnabled">
 					{{ t('spreed', 'Enable SIP dial-in') }}
@@ -186,8 +165,6 @@ export default {
 		return {
 			showLayoutHint: false,
 			hintDismissed: false,
-			lobbyTimerLoading: false,
-			readOnlyStateLoading: false,
 		}
 	},
 
@@ -284,41 +261,7 @@ export default {
 			return this.conversation.type === CONVERSATION.TYPE.GROUP
 				|| this.conversation.type === CONVERSATION.TYPE.PUBLIC
 		},
-		hasLobbyEnabled() {
-			return this.conversation.lobbyState === WEBINAR.LOBBY.NON_MODERATORS
-		},
-		isReadOnly() {
-			return this.conversation.readOnly === CONVERSATION.STATE.READ_ONLY
-		},
-		lobbyTimer() {
-			// A timestamp of 0 means that there is no lobby, but it would be
-			// interpreted as the Unix epoch by the DateTimePicker.
-			if (this.conversation.lobbyTimer === 0) {
-				return undefined
-			}
 
-			// PHP timestamp is second-based; JavaScript timestamp is
-			// millisecond based.
-			return new Date(this.conversation.lobbyTimer * 1000)
-		},
-
-		dateTimePickerAttrs() {
-			return {
-				format: 'YYYY-MM-DD HH:mm',
-				firstDayOfWeek: window.firstDay + 1, // Provided by server
-				lang: {
-					days: window.dayNamesShort, // Provided by server
-					months: window.monthNamesShort, // Provided by server
-				},
-				// Do not update the value until the confirm button has been
-				// pressed. Otherwise it would not be possible to set a lobby
-				// for today, because as soon as the day is selected the lobby
-				// timer would be set, but as no time was set at that point the
-				// lobby timer would be set to today at 00:00, which would
-				// disable the lobby due to being in the past.
-				confirm: true,
-			}
-		},
 		hasSIPEnabled() {
 			return this.conversation.sipEnabled === WEBINAR.SIP.ENABLED
 		},
@@ -403,13 +346,6 @@ export default {
 			this.showLayoutHint = false
 		},
 
-		async toggleLobby() {
-			await this.$store.dispatch('toggleLobby', {
-				token: this.token,
-				enableLobby: this.conversation.lobbyState !== WEBINAR.LOBBY.NON_MODERATORS,
-			})
-		},
-
 		async toggleSIPEnabled(checked) {
 			try {
 				await this.$store.dispatch('setSIPEnabled', {
@@ -421,33 +357,6 @@ export default {
 				// TODO showError()
 				console.error(e)
 			}
-		},
-
-		async setLobbyTimer(date) {
-			this.lobbyTimerLoading = true
-
-			let timestamp = 0
-			if (date) {
-				// PHP timestamp is second-based; JavaScript timestamp is
-				// millisecond based.
-				timestamp = date.getTime() / 1000
-			}
-
-			await this.$store.dispatch('setLobbyTimer', {
-				token: this.token,
-				timestamp: timestamp,
-			})
-
-			this.lobbyTimerLoading = false
-		},
-
-		async toggleReadOnly() {
-			this.readOnlyStateLoading = true
-			await this.$store.dispatch('setReadOnlyState', {
-				token: this.token,
-				readOnly: this.isReadOnly ? CONVERSATION.STATE.READ_WRITE : CONVERSATION.STATE.READ_ONLY,
-			})
-			this.readOnlyStateLoading = false
 		},
 
 		async handleCopyLink() {
