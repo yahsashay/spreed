@@ -21,12 +21,6 @@
 
 <template>
 	<ul>
-		<ActionButton
-			icon="icon-clippy"
-			:close-after-click="true"
-			@click="handleCopyLink">
-			{{ t('spreed', 'Copy link') }}
-		</ActionButton>
 		<ActionCheckbox
 			:disabled="isSaving"
 			:checked="isSharedPublicly"
@@ -62,8 +56,6 @@ import { CONVERSATION } from '../../constants'
 import {
 	setConversationPassword,
 } from '../../services/conversationsService'
-import { generateUrl } from '@nextcloud/router'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 
@@ -71,7 +63,6 @@ export default {
 	name: 'LinkShareSettings',
 
 	components: {
-		ActionButton,
 		ActionCheckbox,
 		ActionInput,
 	},
@@ -101,15 +92,6 @@ export default {
 	},
 
 	methods: {
-		async handleCopyLink() {
-			try {
-				await this.$copyText(window.location.protocol + '//' + window.location.host + generateUrl('/call/' + this.token))
-				showSuccess(t('spreed', 'Conversation link copied to clipboard.'))
-			} catch (error) {
-				showError(t('spreed', 'The link could not be copied.'))
-			}
-		},
-
 		async setConversationPassword(newPassword) {
 			this.isSaving = true
 			try {
