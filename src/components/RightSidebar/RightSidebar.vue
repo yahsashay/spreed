@@ -29,7 +29,6 @@
 		:starred="isFavorited"
 		:title-editable="canModerate && isRenamingConversation"
 		:class="'active-tab-' + activeTab"
-		:active="activeTab"
 		@update:active="handleUpdateActive"
 		@update:starred="onFavoriteChange"
 		@update:title="handleUpdateTitle"
@@ -65,10 +64,6 @@
 				:id="conversation.token"
 				type="room"
 				:name="conversation.displayName" />
-			<LinkShareSettings
-				v-if="token && canFullModerate && showModerationOptions" />
-			<ModerationSettings
-				v-if="token && showModerationOptions" />
 			<div id="app-settings">
 				<div id="app-settings-header">
 					<button class="settings-button" @click="showSettings">
@@ -90,13 +85,11 @@ import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
 import ChatView from '../ChatView'
 import { CollectionList } from 'nextcloud-vue-collections'
 import BrowserStorage from '../../services/BrowserStorage'
-import { CONVERSATION, PARTICIPANT } from '../../constants'
+import { CONVERSATION, WEBINAR, PARTICIPANT } from '../../constants'
 import ParticipantsTab from './Participants/ParticipantsTab'
 import MatterbridgeSettings from './Matterbridge/MatterbridgeSettings'
 import isInLobby from '../../mixins/isInLobby'
 import SetGuestUsername from '../SetGuestUsername'
-import LinkShareSettings from './Settings/LinkShareSettings'
-import ModerationSettings from './Settings/ModerationSettings'
 
 export default {
 	name: 'RightSidebar',
@@ -108,8 +101,6 @@ export default {
 		ParticipantsTab,
 		SetGuestUsername,
 		MatterbridgeSettings,
-		LinkShareSettings,
-		ModerationSettings,
 	},
 
 	mixins: [
@@ -125,6 +116,7 @@ export default {
 
 	data() {
 		return {
+			activeTab: 'participants',
 			contactsLoading: false,
 			// The conversation name (while editing)
 			conversationName: '',
@@ -138,9 +130,6 @@ export default {
 		show() {
 			return this.$store.getters.getSidebarStatus
 		},
-		activeTab() {
-			return this.$store.getters.sidebarActiveTab
-		},
 		opened() {
 			return !!this.token && !this.isInLobby && this.show
 		},
@@ -148,7 +137,18 @@ export default {
 			return this.$store.getters.getToken()
 		},
 		conversation() {
-			return this.$store.getters.conversation(this.token) || this.$store.getters.dummyConversation
+			if (this.$store.getters.conversation(this.token)) {
+				return this.$store.getters.conversation(this.token)
+			}
+			return {
+				token: '',
+				displayName: '',
+				isFavorite: false,
+				hasPassword: false,
+				type: CONVERSATION.TYPE.PUBLIC,
+				lobbyState: WEBINAR.LOBBY.NONE,
+				lobbyTimer: 0,
+			}
 		},
 
 		getUserId() {
@@ -183,10 +183,6 @@ export default {
 
 		canModerate() {
 			return this.conversation.type !== CONVERSATION.TYPE.ONE_TO_ONE && (this.canFullModerate || this.participantType === PARTICIPANT.TYPE.GUEST_MODERATOR)
-		},
-
-		showModerationOptions() {
-			return this.conversation.type !== CONVERSATION.TYPE.ONE_TO_ONE && this.canModerate
 		},
 
 		/**
@@ -225,7 +221,7 @@ export default {
 		},
 
 		handleUpdateActive(active) {
-			this.$store.dispatch('setSidebarActiveTab', active)
+			this.activeTab = active
 		},
 
 		/**

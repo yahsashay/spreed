@@ -19,21 +19,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import BrowserStorage from '../services/BrowserStorage'
 
 const state = {
 	show: true,
 	isRenamingConversation: false,
 	sidebarOpenBeforeEditing: null,
-	sidebarActiveTab: null,
+
 }
 
 const getters = {
 	getSidebarStatus: (state) => {
 		return state.show
-	},
-	sidebarActiveTab: (state) => {
-		return state.sidebarActiveTab
 	},
 	isRenamingConversation: (state) => {
 		return state.isRenamingConversation
@@ -42,23 +38,12 @@ const getters = {
 
 const mutations = {
 	/**
-	 * Sets the active tab of the sidebar
-	 *
-	 * @param {object} state current store state;
-	 * @param {String} activeTab id of the active tab to set or null for default
-	 */
-	sidebarActiveTab(state, activeTab) {
-		state.sidebarActiveTab = activeTab
-	},
-
-	/**
 	 * Shows the sidebar
 	 *
 	 * @param {object} state current store state;
 	 */
 	showSidebar(state) {
 		state.show = true
-		BrowserStorage.setItem('sidebarOpen', 'true')
 	},
 	/**
 	 * Hides the sidebar
@@ -67,7 +52,6 @@ const mutations = {
 	 */
 	hideSidebar(state) {
 		state.show = false
-		BrowserStorage.setItem('sidebarOpen', 'false')
 	},
 	/**
 	 * Renaming state of the conversation
@@ -88,25 +72,14 @@ const mutations = {
 }
 
 const actions = {
-	/**
-	 * Sets the active tab of the sidebar
-	 *
-	 * @param {object} context default store context;
-	 * @param {String} activeTab id of the active tab to set or null for default
-	 */
-	setSidebarActiveTab(context, activeTab) {
-		context.commit('sidebarActiveTab', activeTab)
-	},
 
 	/**
 	 * Shows the sidebar
 	 *
 	 * @param {object} context default store context;
-	 * @param {String} activeTab id of the active tab to set or null for default
 	 */
-	showSidebar(context, activeTab = null) {
+	showSidebar(context) {
 		context.commit('showSidebar')
-		context.commit('sidebarActiveTab', activeTab)
 	},
 	/**
 	 * Hides the sidebar

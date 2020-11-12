@@ -58,10 +58,10 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { CONVERSATION } from '../../../constants'
+import { CONVERSATION } from '../../constants'
 import {
 	setConversationPassword,
-} from '../../../services/conversationsService'
+} from '../../services/conversationsService'
 import { generateUrl } from '@nextcloud/router'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'

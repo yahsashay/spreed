@@ -48,7 +48,7 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { CONVERSATION, WEBINAR } from '../../../constants'
+import { CONVERSATION, WEBINAR } from '../../constants'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 

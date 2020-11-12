@@ -107,12 +107,14 @@
 					{{ t('spreed', 'Mute others') }}
 				</ActionButton>
 			</template>
-			<ActionSeparator />
+			<ActionSeparator
+				v-if="showModerationOptions" />
 			<ActionButton
+				v-if="showModerationOptions"
 				icon="icon-settings"
 				:close-after-click="true"
-				@click="openSettingsSidebar">
-				{{ t('spreed', 'More settings') }}
+				@click="showConversationSettings">
+				{{ t('spreed', 'Conversation settings') }}
 			</ActionButton>
 		</Actions>
 		<Actions v-if="showOpenSidebarButton"
@@ -132,13 +134,14 @@ import Popover from '@nextcloud/vue/dist/Components/Popover'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import CallButton from './CallButton'
 import { EventBus } from '../../services/EventBus'
+import BrowserStorage from '../../services/BrowserStorage'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
-import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
 import ActionSeparator from '@nextcloud/vue/dist/Components/ActionSeparator'
 import { CONVERSATION, WEBINAR, PARTICIPANT } from '../../constants'
 import { generateUrl } from '@nextcloud/router'
 import { callParticipantCollection } from '../../utils/webrtc/index'
+import { emit } from '@nextcloud/event-bus'
 
 export default {
 	name: 'TopBar',
@@ -147,7 +150,6 @@ export default {
 		ActionButton,
 		Actions,
 		ActionCheckbox,
-		ActionInput,
 		ActionLink,
 		CallButton,
 		Popover,
@@ -291,10 +293,11 @@ export default {
 	methods: {
 		openSidebar() {
 			this.$store.dispatch('showSidebar')
+			BrowserStorage.setItem('sidebarOpen', 'true')
 		},
 
-		openSettingsSidebar() {
-			this.$store.dispatch('showSidebar', 'settings-tab')
+		showConversationSettings() {
+			emit('show-conversation-settings')
 		},
 
 		fullScreenChanged() {
