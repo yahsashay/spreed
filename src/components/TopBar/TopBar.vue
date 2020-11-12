@@ -90,14 +90,6 @@
 				{{ t('spreed', 'Copy link') }}
 			</ActionButton>
 			<template
-				v-if="showModerationOptions">
-				<ActionCheckbox
-					:checked="hasSIPEnabled"
-					@change="toggleSIPEnabled">
-					{{ t('spreed', 'Enable SIP dial-in') }}
-				</ActionCheckbox>
-			</template>
-			<template
 				v-if="showModerationOptions && canFullModerate && isInCall">
 				<ActionSeparator />
 				<ActionButton
@@ -135,10 +127,9 @@ import Actions from '@nextcloud/vue/dist/Components/Actions'
 import CallButton from './CallButton'
 import { EventBus } from '../../services/EventBus'
 import BrowserStorage from '../../services/BrowserStorage'
-import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
 import ActionSeparator from '@nextcloud/vue/dist/Components/ActionSeparator'
-import { CONVERSATION, WEBINAR, PARTICIPANT } from '../../constants'
+import { CONVERSATION, PARTICIPANT } from '../../constants'
 import { generateUrl } from '@nextcloud/router'
 import { callParticipantCollection } from '../../utils/webrtc/index'
 import { emit } from '@nextcloud/event-bus'
@@ -149,7 +140,6 @@ export default {
 	components: {
 		ActionButton,
 		Actions,
-		ActionCheckbox,
 		ActionLink,
 		CallButton,
 		Popover,
@@ -264,9 +254,6 @@ export default {
 				|| this.conversation.type === CONVERSATION.TYPE.PUBLIC
 		},
 
-		hasSIPEnabled() {
-			return this.conversation.sipEnabled === WEBINAR.SIP.ENABLED
-		},
 		isGrid() {
 			return this.$store.getters.isGrid
 		},
@@ -347,19 +334,6 @@ export default {
 			this.$store.dispatch('setCallViewMode', { isGrid: !this.isGrid })
 			this.$store.dispatch('selectedVideoPeerId', null)
 			this.showLayoutHint = false
-		},
-
-		async toggleSIPEnabled(checked) {
-			try {
-				await this.$store.dispatch('setSIPEnabled', {
-					token: this.token,
-					state: checked ? WEBINAR.SIP.ENABLED : WEBINAR.SIP.DISABLED,
-				})
-			} catch (e) {
-				// TODO check "precondition failed"
-				// TODO showError()
-				console.error(e)
-			}
 		},
 
 		async handleCopyLink() {
