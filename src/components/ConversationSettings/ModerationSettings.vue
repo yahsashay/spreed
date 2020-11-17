@@ -52,6 +52,7 @@
 			@change="setLobbyTimer">
 			{{ t('spreed', 'Start time (optional)') }}
 		</ActionInput>
+		<SipSettings />
 	</ul>
 </template>
 
@@ -60,6 +61,7 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 import { CONVERSATION, WEBINAR } from '../../constants'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
+import SipSettings from './SipSettings'
 
 export default {
 	name: 'ModerationSettings',
@@ -67,6 +69,7 @@ export default {
 	components: {
 		ActionCheckbox,
 		ActionInput,
+		SipSettings,
 	},
 
 	data() {

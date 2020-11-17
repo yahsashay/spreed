@@ -31,11 +31,6 @@
 			class="app-settings-section">
 			<ModerationSettings />
 		</AppSettingsSection>
-		<AppSettingsSection
-			:title="t('spreed', 'SIP support')"
-			class="app-settings-section">
-			<SipSettings />
-		</AppSettingsSection>
 	</AppSettingsDialog>
 </template>
 
@@ -46,7 +41,6 @@ import AppSettingsDialog from '@nextcloud/vue/dist/Components/AppSettingsDialog'
 import AppSettingsSection from '@nextcloud/vue/dist/Components/AppSettingsSection'
 import LinkShareSettings from './LinkShareSettings'
 import ModerationSettings from './ModerationSettings'
-import SipSettings from './SipSettings'
 
 export default {
 	name: 'ConversationSettingsDialog',
@@ -56,7 +50,6 @@ export default {
 		AppSettingsSection,
 		LinkShareSettings,
 		ModerationSettings,
-		SipSettings,
 	},
 
 	data() {
