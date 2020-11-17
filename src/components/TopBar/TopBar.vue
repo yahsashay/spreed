@@ -106,7 +106,7 @@
 				icon="icon-settings"
 				:close-after-click="true"
 				@click="showConversationSettings">
-				{{ t('spreed', 'Conversation settings') }}
+				{{ t('spreed', 'More settings') }}
 			</ActionButton>
 		</Actions>
 		<Actions v-if="showOpenSidebarButton"

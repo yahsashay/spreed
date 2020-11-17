@@ -21,6 +21,9 @@
 
 <template>
 	<ul>
+		<h3 class="app-settings-section__hint">
+			{{ t('spreed', 'Allow guests to use a public link connect to join this conversation.') }}
+		</h3>
 		<ActionCheckbox
 			:disabled="isSaving"
 			:checked="isSharedPublicly"
@@ -154,3 +157,10 @@ export default {
 	},
 }
 </script>
+
+<style lang="scss" scoped>
+.app-settings-section__hint {
+	color: var(--color-text-lighter);
+	padding: 8px 0;
+}
+</style>

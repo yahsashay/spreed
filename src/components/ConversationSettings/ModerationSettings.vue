@@ -21,18 +21,27 @@
 
 <template>
 	<ul>
+		<h3 class="app-settings-section__hint">
+			{{ t('spreed', 'Locking the conversation prevents anyone to post messages or start calls.') }}
+		</h3>
 		<ActionCheckbox
 			:checked="isReadOnly"
 			:disabled="isReadOnlyStateLoading"
 			@change="toggleReadOnly">
 			{{ t('spreed', 'Lock conversation') }}
 		</ActionCheckbox>
+		<h3 class="app-settings-section__hint">
+			{{ t('spreed', 'Enabling the lobby only allows moderators to post messages.') }}
+		</h3>
 		<ActionCheckbox
 			:disabled="isLobbyStateLoading"
 			:checked="hasLobbyEnabled"
 			@change="toggleLobby">
 			{{ t('spreed', 'Enable lobby') }}
 		</ActionCheckbox>
+		<h3 v-if="hasLobbyEnabled" class="app-settings-section__hint">
+			{{ t('spreed', 'After the time limit the lobby will be automatically disabled.') }}
+		</h3>
 		<ActionInput
 			v-if="hasLobbyEnabled"
 			icon="icon-calendar-dark"
@@ -193,3 +202,10 @@ export default {
 	},
 }
 </script>
+
+<style lang="scss" scoped>
+.app-settings-section__hint {
+	color: var(--color-text-lighter);
+	padding: 8px 0;
+}
+</style>
