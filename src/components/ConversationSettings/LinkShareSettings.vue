@@ -50,6 +50,14 @@
 			@submit="handleSetNewPassword">
 			{{ t('spreed', 'Enter a password') }}
 		</ActionInput>
+		<ActionButton
+			v-if="isSharedPublicly"
+			:disabled="isSaving"
+			icon="icon-clippy"
+			:close-after-click="true"
+			@click="handleCopyLink">
+			{{ t('spreed', 'Copy public link') }}
+		</ActionButton>
 	</ul>
 </template>
 
@@ -59,8 +67,10 @@ import { CONVERSATION } from '../../constants'
 import {
 	setConversationPassword,
 } from '../../services/conversationsService'
+import { generateUrl } from '@nextcloud/router'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 
 export default {
 	name: 'LinkShareSettings',
@@ -68,6 +78,7 @@ export default {
 	components: {
 		ActionCheckbox,
 		ActionInput,
+		ActionButton,
 	},
 
 	data() {
@@ -91,6 +102,10 @@ export default {
 
 		conversation() {
 			return this.$store.getters.conversation(this.token) || this.$store.getters.dummyConversation
+		},
+
+		linkToConversation() {
+			return window.location.protocol + '//' + window.location.host + generateUrl('/call/' + this.token)
 		},
 	},
 
@@ -153,6 +168,15 @@ export default {
 			await this.setConversationPassword(this.password)
 			this.password = ''
 			this.showPasswordField = false
+		},
+
+		async handleCopyLink() {
+			try {
+				await this.$copyText(this.linkToConversation)
+				showSuccess(t('spreed', 'Conversation link copied to clipboard.'))
+			} catch (error) {
+				showError(t('spreed', 'The link could not be copied.'))
+			}
 		},
 	},
 }

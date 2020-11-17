@@ -21,7 +21,7 @@
 
 <template>
 	<AppSettingsDialog :open.sync="showSettings" :show-navigation="true" first-selected-section="keyboard shortcuts">
-		<AppSettingsSection :title="t('spreed', 'Guest access')"
+		<AppSettingsSection :title="t('spreed', 'Guests access')"
 			class="app-settings-section">
 			<LinkShareSettings />
 		</AppSettingsSection>
