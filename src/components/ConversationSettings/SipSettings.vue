@@ -20,30 +20,28 @@
 -->
 
 <template>
-	<ul>
-		<h3 class="app-settings-section__hint">
+	<div>
+		<div id="sip_settings_hint" class="app-settings-section__hint">
 			{{ t('spreed', 'Allow participants to join from a phone.') }}
-		</h3>
-		<ActionCheckbox
+		</div>
+		<input id="sip_settings_checkbox"
+			aria-describedby="sip_settings_hint"
+			type="checkbox"
+			class="checkbox"
+			name="sip_settings_checkbox"
 			:checked="hasSIPEnabled"
 			:disabled="isSipLoading"
 			@change="toggleSIPEnabled">
-			{{ t('spreed', 'Enable SIP dial-in') }}
-		</ActionCheckbox>
-	</ul>
+		<label for="sip_settings_checkbox">{{ t('spreed', 'Enable SIP dial-in') }}</label>
+	</div>
 </template>
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { WEBINAR } from '../../constants'
-import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 
 export default {
 	name: 'SipSettings',
-
-	components: {
-		ActionCheckbox,
-	},
 
 	data() {
 		return {
