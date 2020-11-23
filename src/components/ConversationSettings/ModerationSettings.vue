@@ -55,7 +55,7 @@
 		<div v-if="hasLobbyEnabled">
 			<form
 				:disabled="lobbyTimerFieldDisabled"
-				@submit.prevent="setLobbyTimer">
+				@submit.prevent="saveLobbyTimer">
 				<span class="icon-calendar-dark" />
 				<div>
 					<label for="moderation_settings_lobby_timer_field">{{ t('spreed', 'Meeting start time') }}</label>
@@ -68,10 +68,12 @@
 						:placeholder="t('spreed', 'Start time (optional)')"
 						:disabled="lobbyTimerFieldDisabled"
 						type="datetime"
-						:input-class="{ focusable: !lobbyTimerFieldDisabled }"
-						v-bind="dateTimePickerAttrs" />
+						:input-class="['mx-input', { focusable: !lobbyTimerFieldDisabled }]"
+						v-bind="dateTimePickerAttrs"
+						@change="setNewLobbyTimer" />
 					<button
 						id="moderation_settings_lobby_timer_submit"
+						:aria-label="t('spreed', 'Save meeting start time')"
 						:disabled="lobbyTimerFieldDisabled"
 						type="submit"
 						class="icon icon-confirm-fade" />
@@ -101,6 +103,7 @@ export default {
 			isReadOnlyStateLoading: false,
 			isLobbyStateLoading: false,
 			isLobbyTimerLoading: false,
+			newLobbyTimer: null,
 		}
 	},
 
@@ -207,9 +210,7 @@ export default {
 			this.isLobbyStateLoading = false
 		},
 
-		async setLobbyTimer(date) {
-			this.isLobbyTimerLoading = true
-
+		setNewLobbyTimer(date) {
 			let timestamp = 0
 			if (date) {
 				// PHP timestamp is second-based; JavaScript timestamp is
@@ -217,10 +218,16 @@ export default {
 				timestamp = date.getTime() / 1000
 			}
 
+			this.newLobbyTimer = timestamp
+		},
+
+		async saveLobbyTimer() {
+			this.isLobbyTimerLoading = true
+
 			try {
 				await this.$store.dispatch('setLobbyTimer', {
 					token: this.token,
-					timestamp: timestamp,
+					timestamp: this.newLobbyTimer,
 				})
 				showSuccess(t('spreed', 'Start time has been updated'))
 			} catch (e) {
@@ -243,7 +250,6 @@ export default {
 ::v-deep .mx-input {
 	margin: 0;
 }
-
 
 input[type=password] {
 	width: 200px;

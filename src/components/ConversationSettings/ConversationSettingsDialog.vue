@@ -99,7 +99,7 @@ export default {
 <style lang="scss" scoped>
 ::v-deep button.icon {
 	height: 32px;
-    width: 32px;
-    display: inline-block;
+	width: 32px;
+	display: inline-block;
 }
 </style>
