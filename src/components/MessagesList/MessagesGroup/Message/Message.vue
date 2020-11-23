@@ -28,15 +28,15 @@ the main body of the message as well as a quote.
 	<div
 		:id="`message_${id}`"
 		ref="message"
-		tabindex="0"
+		tabindex="-1"
 		class="message"
 		:class="{'hover': showActions && !isSystemMessage, 'system' : isSystemMessage}"
 		@keydown.up.prevent="jumpToPrevious"
 		@keydown.down.prevent="jumpToNext"
-		@focus="showActions=true"
-		@blur="showActions=false"
-		@mouseover="showActions=true"
-		@mouseleave="showActions=false">
+		@focus="isFocussed=true"
+		@blur="isFocussed=false"
+		@mouseover="isHovered=true"
+		@mouseleave="isHovered=false">
 		<div v-if="isFirstMessage && showAuthor" class="message__author">
 			<h6>{{ actorDisplayName }}</h6>
 		</div>
@@ -71,6 +71,8 @@ the main body of the message as well as a quote.
 						v-if="isReplyable"
 						icon="icon-reply"
 						:close-after-click="true"
+						@focus="isActionFocussed=true"
+						@blur="isActionFocussed=false"
 						@click.stop="handleReply">
 						{{ t('spreed', 'Reply') }}
 					</ActionButton>
@@ -229,13 +231,18 @@ export default {
 
 	data() {
 		return {
-			showActions: false,
 			// Is tall enough for both actions and date upon hovering
 			isTallEnough: false,
+			isFocussed: false,
+			isHovered: false,
+			isActionFocussed: false,
 		}
 	},
 
 	computed: {
+		showActions() {
+			return (this.isFocussed || this.isHovered || this.isActionFocussed)
+		},
 		hasActions() {
 			return this.isReplyable && !this.isConversationReadOnly
 		},
