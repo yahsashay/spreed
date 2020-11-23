@@ -40,11 +40,13 @@ get the messagesList array and loop through the list to generate the messages.
 				class="icon-loading" />
 		</div>
 		<MessagesGroup
-			v-for="item of messagesGroupedByAuthor"
+			v-for="(item, index) of messagesGroupedByAuthor"
 			:key="item[0].id"
 			:style="{ height: item.height + 'px' }"
 			v-bind="item"
 			:messages="item"
+			:next-message="messagesGroupedByAuthor[index + 1] && messagesGroupedByAuthor[index + 1][0].id"
+			:previous-message="index > 0 && messagesGroupedByAuthor[index - 1][messagesGroupedByAuthor[index - 1].length - 1].id"
 			@deleteMessage="handleDeleteMessage" />
 		<template v-if="!messagesGroupedByAuthor.length">
 			<LoadingPlaceholder

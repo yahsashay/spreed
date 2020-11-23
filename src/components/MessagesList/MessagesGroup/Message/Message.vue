@@ -28,8 +28,13 @@ the main body of the message as well as a quote.
 	<div
 		:id="`message_${id}`"
 		ref="message"
+		tabindex="0"
 		class="message"
 		:class="{'hover': showActions && !isSystemMessage, 'system' : isSystemMessage}"
+		@keydown.up.prevent="jumpToPrevious"
+		@keydown.down.prevent="jumpToNext"
+		@focus="showActions=true"
+		@blur="showActions=false"
 		@mouseover="showActions=true"
 		@mouseleave="showActions=false">
 		<div v-if="isFirstMessage && showAuthor" class="message__author">
@@ -155,6 +160,20 @@ export default {
 		id: {
 			type: [String, Number],
 			required: true,
+		},
+		/**
+		 * Id of the next message
+		 */
+		nextMessage: {
+			type: [String, Number],
+			default: null,
+		},
+		/**
+		 * Id of the previous message
+		 */
+		previousMessage: {
+			type: [String, Number],
+			default: null,
 		},
 		/**
 		 * If true, it displays the message author on top of the message.
@@ -352,6 +371,19 @@ export default {
 	},
 
 	methods: {
+		jumpToPrevious() {
+			const el = document.getElementById('message_' + this.previousMessage)
+			if (el) {
+				el.focus()
+			}
+		},
+		jumpToNext() {
+			const el = document.getElementById('message_' + this.nextMessage)
+			if (el) {
+				el.focus()
+			}
+		},
+
 		highlightAnimation() {
 			// trigger CSS highlight animation by setting a class
 			this.$refs.message.classList.add('highlight-animation')
@@ -390,6 +422,10 @@ export default {
 	padding: 4px;
 	font-size: $chat-font-size;
 	line-height: $chat-line-height;
+	&:focus {
+		background-color: var(--color-background-hover);
+	}
+
 	&__author {
 		color: var(--color-text-maxcontrast);
 	}
