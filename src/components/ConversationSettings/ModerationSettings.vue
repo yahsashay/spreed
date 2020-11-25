@@ -24,6 +24,7 @@
 		<div class="app-settings-subsection">
 			<div id="moderation_settings_lock_conversation_hint" class="app-settings-section__hint">
 				{{ t('spreed', 'Locking the conversation prevents anyone to post messages or start calls.') }}
+				<span v-if="isInCall">{{ t('spreed', 'You cannot lock a conversation while in a call!') }}</span>
 			</div>
 			<div>
 				<input id="moderation_settings_lock_conversation_checkbox"
@@ -32,7 +33,7 @@
 					class="checkbox"
 					name="moderation_settings_lock_conversation_checkbox"
 					:checked="isReadOnly"
-					:disabled="isReadOnlyStateLoading"
+					:disabled="isReadOnlyStateLoading || isInCall"
 					@change="toggleReadOnly">
 				<label for="moderation_settings_lock_conversation_checkbox">{{ t('spreed', 'Lock conversation') }}</label>
 			</div>
@@ -92,6 +93,8 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
+import isInCall from '../../mixins/isInCall'
+import participant from '../../mixins/participant'
 import { CONVERSATION, WEBINAR } from '../../constants'
 import DatetimePicker from '@nextcloud/vue/dist/Components/DatetimePicker'
 import SipSettings from './SipSettings'
@@ -103,6 +106,11 @@ export default {
 		DatetimePicker,
 		SipSettings,
 	},
+
+	mixins: [
+		isInCall,
+		participant,
+	],
 
 	data() {
 		return {
