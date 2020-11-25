@@ -101,5 +101,24 @@ export default {
 	height: 32px;
 	width: 32px;
 	display: inline-block;
+	margin-left: 5px;
+	vertical-align: middle;
+}
+
+::v-deep .app-settings__content {
+	width: 450px;
+}
+
+::v-deep .app-settings-section__hint {
+	color: var(--color-text-lighter);
+	padding: 8px 0;
+}
+
+::v-deep .app-settings-subsection {
+	margin-top: 25px;
+
+	&:first-child {
+		margin-top: 0px;
+	}
 }
 </style>

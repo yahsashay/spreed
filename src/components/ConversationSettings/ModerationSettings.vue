@@ -21,64 +21,70 @@
 
 <template>
 	<div>
-		<div id="moderation_settings_lock_conversation_hint" class="app-settings-section__hint">
-			{{ t('spreed', 'Locking the conversation prevents anyone to post messages or start calls.') }}
+		<div class="app-settings-subsection">
+			<div id="moderation_settings_lock_conversation_hint" class="app-settings-section__hint">
+				{{ t('spreed', 'Locking the conversation prevents anyone to post messages or start calls.') }}
+			</div>
+			<div>
+				<input id="moderation_settings_lock_conversation_checkbox"
+					aria-describedby="moderation_settings_lock_conversation_hint"
+					type="checkbox"
+					class="checkbox"
+					name="moderation_settings_lock_conversation_checkbox"
+					:checked="isReadOnly"
+					:disabled="isReadOnlyStateLoading"
+					@change="toggleReadOnly">
+				<label for="moderation_settings_lock_conversation_checkbox">{{ t('spreed', 'Lock conversation') }}</label>
+			</div>
 		</div>
-		<div>
-			<input id="moderation_settings_lock_conversation_checkbox"
-				aria-describedby="moderation_settings_lock_conversation_hint"
-				type="checkbox"
-				class="checkbox"
-				name="moderation_settings_lock_conversation_checkbox"
-				:checked="isReadOnly"
-				:disabled="isReadOnlyStateLoading"
-				@change="toggleReadOnly">
-			<label for="moderation_settings_lock_conversation_checkbox">{{ t('spreed', 'Lock conversation') }}</label>
+		<div class="app-settings-subsection">
+			<div id="moderation_settings_enable_lobby_hint" class="app-settings-section__hint">
+				{{ t('spreed', 'Enabling the lobby only allows moderators to post messages.') }}
+			</div>
+			<div>
+				<input id="moderation_settings_enable_lobby_checkbox"
+					aria-describedby="moderation_settings_enable_lobby_hint"
+					type="checkbox"
+					class="checkbox"
+					name="moderation_settings_enable_lobby_checkbox"
+					:checked="hasLobbyEnabled"
+					:disabled="isLobbyStateLoading"
+					@change="toggleLobby">
+				<label for="moderation_settings_enable_lobby_checkbox">{{ t('spreed', 'Enable lobby') }}</label>
+			</div>
 		</div>
-		<div id="moderation_settings_enable_lobby_hint" class="app-settings-section__hint">
-			{{ t('spreed', 'Enabling the lobby only allows moderators to post messages.') }}
-		</div>
-		<div>
-			<input id="moderation_settings_enable_lobby_checkbox"
-				aria-describedby="moderation_settings_enable_lobby_hint"
-				type="checkbox"
-				class="checkbox"
-				name="moderation_settings_enable_lobby_checkbox"
-				:checked="hasLobbyEnabled"
-				:disabled="isLobbyStateLoading"
-				@change="toggleLobby">
-			<label for="moderation_settings_enable_lobby_checkbox">{{ t('spreed', 'Enable lobby') }}</label>
-		</div>
-		<div v-if="hasLobbyEnabled" id="moderation_settings_lobby_timer_hint" class="app-settings-section__hint">
-			{{ t('spreed', 'After the time limit the lobby will be automatically disabled.') }}
-		</div>
-		<div v-if="hasLobbyEnabled">
-			<form
-				:disabled="lobbyTimerFieldDisabled"
-				@submit.prevent="saveLobbyTimer">
-				<span class="icon-calendar-dark" />
-				<div>
-					<label for="moderation_settings_lobby_timer_field">{{ t('spreed', 'Meeting start time') }}</label>
-				</div>
-				<div>
-					<DatetimePicker
-						id="moderation_settings_lobby_timer_field"
-						aria-describedby="moderation_settings_lobby_timer_hint"
-						:value="lobbyTimer"
-						:placeholder="t('spreed', 'Start time (optional)')"
-						:disabled="lobbyTimerFieldDisabled"
-						type="datetime"
-						:input-class="['mx-input', { focusable: !lobbyTimerFieldDisabled }]"
-						v-bind="dateTimePickerAttrs"
-						@change="setNewLobbyTimer" />
-					<button
-						id="moderation_settings_lobby_timer_submit"
-						:aria-label="t('spreed', 'Save meeting start time')"
-						:disabled="lobbyTimerFieldDisabled"
-						type="submit"
-						class="icon icon-confirm-fade" />
-				</div>
-			</form>
+		<div class="app-settings-subsection">
+			<div v-if="hasLobbyEnabled" id="moderation_settings_lobby_timer_hint" class="app-settings-section__hint">
+				{{ t('spreed', 'After the time limit the lobby will be automatically disabled.') }}
+			</div>
+			<div v-if="hasLobbyEnabled">
+				<form
+					:disabled="lobbyTimerFieldDisabled"
+					@submit.prevent="saveLobbyTimer">
+					<span class="icon-calendar-dark" />
+					<div>
+						<label for="moderation_settings_lobby_timer_field">{{ t('spreed', 'Meeting start time') }}</label>
+					</div>
+					<div>
+						<DatetimePicker
+							id="moderation_settings_lobby_timer_field"
+							aria-describedby="moderation_settings_lobby_timer_hint"
+							:value="lobbyTimer"
+							:placeholder="t('spreed', 'Start time (optional)')"
+							:disabled="lobbyTimerFieldDisabled"
+							type="datetime"
+							:input-class="['mx-input', { focusable: !lobbyTimerFieldDisabled }]"
+							v-bind="dateTimePickerAttrs"
+							@change="setNewLobbyTimer" />
+						<button
+							id="moderation_settings_lobby_timer_submit"
+							:aria-label="t('spreed', 'Save meeting start time')"
+							:disabled="lobbyTimerFieldDisabled"
+							type="submit"
+							class="icon icon-confirm-fade" />
+					</div>
+				</form>
+			</div>
 		</div>
 		<SipSettings />
 	</div>
@@ -242,11 +248,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.app-settings-section__hint {
-	color: var(--color-text-lighter);
-	padding: 8px 0;
-}
-
 ::v-deep .mx-input {
 	margin: 0;
 }

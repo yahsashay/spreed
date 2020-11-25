@@ -20,7 +20,7 @@
 -->
 
 <template>
-	<div>
+	<div class="app-settings-subsection">
 		<div id="sip_settings_hint" class="app-settings-section__hint">
 			{{ t('spreed', 'Allow participants to join from a phone.') }}
 		</div>
@@ -102,9 +102,3 @@ export default {
 	},
 }
 </script>
-<style lang="scss" scoped>
-.app-settings-section__hint {
-	color: var(--color-text-lighter);
-	padding: 8px 0;
-}
-</style>

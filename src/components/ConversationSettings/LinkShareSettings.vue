@@ -21,61 +21,67 @@
 
 <template>
 	<div>
-		<div id="link_share_settings_hint" class="app-settings-section__hint">
-			{{ t('spreed', 'Allow guests to use a public link to join this conversation.') }}
-		</div>
-		<div>
-			<input id="link_share_settings_toggle_guests"
-				ref="toggleGuests"
-				aria-describedby="link_share_settings_hint"
-				type="checkbox"
-				class="checkbox"
-				name="link_share_settings_toggle_guests"
-				:checked="isSharedPublicly"
-				:disabled="isSaving"
-				@change="toggleGuests">
-			<label for="link_share_settings_toggle_guests">{{ t('spreed', 'Allow guests') }}</label>
-		</div>
-		<div id="link_share_settings_password_hint" class="app-settings-section__hint">
-			{{ t('spreed', 'Set a password to restrict who can use the public link.') }}
-		</div>
-		<div v-show="isSharedPublicly">
-			<input id="link_share_settings_toggle_password"
-				ref="togglePassword"
-				aria-describedby="link_share_settings_password_hint"
-				type="checkbox"
-				class="checkbox"
-				:checked="conversation.hasPassword"
-				name="link_share_settings_toggle_password"
-				:disabled="isSaving"
-				@change="togglePassword">
-			<label for="link_share_settings_toggle_password">{{ t('spreed', 'Password protection') }}</label>
-		</div>
-		<div v-show="showPasswordField">
-			<form
-				:disabled="isSaving"
-				@submit.prevent="handleSetNewPassword">
-				<span class="icon-password" />
-				<input
-					id="link_share_settings_link_password"
-					ref="passwordField"
-					v-model="password"
-					aria-describedby="link_share_settings_password_hint"
-					type="password"
+		<div class="app-settings-subsection">
+			<div id="link_share_settings_hint" class="app-settings-section__hint">
+				{{ t('spreed', 'Allow guests to use a public link to join this conversation.') }}
+			</div>
+			<div>
+				<input id="link_share_settings_toggle_guests"
+					ref="toggleGuests"
+					aria-describedby="link_share_settings_hint"
+					type="checkbox"
 					class="checkbox"
-					autocomplete="new-password"
-					name="link_share_settings_link_password"
-					:placeholder="t('spreed', 'Enter a password')"
-					:disabled="isSaving">
-				<button
-					id="link_share_settings_link_password_submit"
-					:aria-label="t('spreed', 'Save password')"
+					name="link_share_settings_toggle_guests"
+					:checked="isSharedPublicly"
 					:disabled="isSaving"
-					type="submit"
-					class="icon icon-confirm-fade" />
-			</form>
+					@change="toggleGuests">
+				<label for="link_share_settings_toggle_guests">{{ t('spreed', 'Allow guests') }}</label>
+			</div>
 		</div>
-		<div>
+		<div class="app-settings-subsection">
+			<div id="link_share_settings_password_hint" class="app-settings-section__hint">
+				{{ t('spreed', 'Set a password to restrict who can use the public link.') }}
+			</div>
+			<div v-show="isSharedPublicly">
+				<input id="link_share_settings_toggle_password"
+					ref="togglePassword"
+					aria-describedby="link_share_settings_password_hint"
+					type="checkbox"
+					class="checkbox"
+					:checked="conversation.hasPassword"
+					name="link_share_settings_toggle_password"
+					:disabled="isSaving"
+					@change="togglePassword">
+				<label for="link_share_settings_toggle_password">{{ t('spreed', 'Password protection') }}</label>
+			</div>
+		</div>
+		<div class="app-settings-subsection">
+			<div v-show="showPasswordField">
+				<form
+					:disabled="isSaving"
+					@submit.prevent="handleSetNewPassword">
+					<span class="icon-password" />
+					<input
+						id="link_share_settings_link_password"
+						ref="passwordField"
+						v-model="password"
+						aria-describedby="link_share_settings_password_hint"
+						type="password"
+						class="checkbox"
+						autocomplete="new-password"
+						name="link_share_settings_link_password"
+						:placeholder="t('spreed', 'Enter a password')"
+						:disabled="isSaving">
+					<button
+						id="link_share_settings_link_password_submit"
+						:aria-label="t('spreed', 'Save password')"
+						:disabled="isSaving"
+						type="submit"
+						class="icon icon-confirm-fade" />
+				</form>
+			</div>
+		</div>
+		<div class="app-settings-subsection">
 			<button
 				ref="copyLinkButton"
 				@click.prevent="handleCopyLink">
@@ -217,11 +223,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.app-settings-section__hint {
-	color: var(--color-text-lighter);
-	padding: 8px 0;
-}
-
 .icon-clippy {
 	margin-right: 10px;
 }
