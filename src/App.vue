@@ -35,6 +35,7 @@
 		<UploadEditor />
 		<SettingsDialog />
 		<ConversationSettingsDialog />
+		<ConversationPictureEditor />
 	</Content>
 </template>
 
@@ -68,9 +69,11 @@ import UploadEditor from './components/UploadEditor'
 import SettingsDialog from './components/SettingsDialog/SettingsDialog'
 import ConversationSettingsDialog from './components/ConversationSettings/ConversationSettingsDialog'
 import '@nextcloud/dialogs/styles/toast.scss'
+import ConversationPictureEditor from './components/ConversationPictureEditor/ConversationPictureEditor'
 
 export default {
 	name: 'App',
+
 	components: {
 		AppContent,
 		Content,
@@ -80,6 +83,7 @@ export default {
 		UploadEditor,
 		SettingsDialog,
 		ConversationSettingsDialog,
+		ConversationPictureEditor,
 	},
 
 	mixins: [
