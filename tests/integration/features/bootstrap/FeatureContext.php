@@ -1467,6 +1467,8 @@ class FeatureContext implements Context, SnippetAcceptingContext {
 		if ($body instanceof TableNode) {
 			$fd = $body->getRowsHash();
 			$options['form_params'] = $fd;
+		} elseif (is_array($body) && array_key_exists('multipart', $body)) {
+			$options = array_merge($options, $body);
 		} elseif (is_array($body)) {
 			$options['form_params'] = $body;
 		}
