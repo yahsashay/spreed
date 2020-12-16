@@ -65,6 +65,10 @@ class RoomAvatar implements IAvatar {
 		$this->avatarFileNameId = 'avatar-' . $this->room->getToken();
 	}
 
+	public function getRoom(): Room {
+		return $this->room;
+	}
+
 	/**
 	 * Gets the room avatar
 	 *
