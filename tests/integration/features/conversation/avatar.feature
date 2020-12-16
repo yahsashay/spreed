@@ -11,8 +11,8 @@ Feature: avatar
     Given user "owner" creates room "one-to-one room"
       | roomType | 1 |
       | invite   | moderator |
-    When user "owner" sets avatar for room "one-to-one room" from file "data/green-square-256.png" with 403
-    And user "moderator" sets avatar for room "one-to-one room" from file "data/green-square-256.png" with 403
+    When user "owner" sets avatar for room "one-to-one room" from file "data/green-square-256.png" with 404
+    And user "moderator" sets avatar for room "one-to-one room" from file "data/green-square-256.png" with 404
     And user "not invited user" sets avatar for room "one-to-one room" from file "data/green-square-256.png" with 404
     And user "guest" sets avatar for room "one-to-one room" from file "data/green-square-256.png" with 404
     Then user "owner" gets avatar for room "one-to-one room"
@@ -59,7 +59,7 @@ Feature: avatar
     And user "owner" adds "moderator" to room "group room" with 200
     And user "owner" promotes "moderator" in room "group room" with 200
     And user "owner" adds "invited user" to room "group room" with 200
-    When user "invited user" sets avatar for room "group room" from file "data/green-square-256.png" with 403
+    When user "invited user" sets avatar for room "group room" from file "data/green-square-256.png" with 404
     And user "not invited user" sets avatar for room "group room" from file "data/green-square-256.png" with 404
     # Guest user names in tests must being with "guest"
     And user "guest not joined" sets avatar for room "group room" from file "data/green-square-256.png" with 404
@@ -158,7 +158,7 @@ Feature: avatar
     And user "guest moderator" joins room "public room" with 200
     And user "owner" promotes "guest moderator" in room "public room" with 200
     And user "guest" joins room "public room" with 200
-    When user "invited user" sets avatar for room "public room" from file "data/green-square-256.png" with 403
+    When user "invited user" sets avatar for room "public room" from file "data/green-square-256.png" with 404
     And user "not invited but joined user" sets avatar for room "public room" from file "data/green-square-256.png" with 404
     And user "not joined user" sets avatar for room "public room" from file "data/green-square-256.png" with 404
     And user "guest" sets avatar for room "public room" from file "data/green-square-256.png" with 404
@@ -194,11 +194,11 @@ Feature: avatar
     When user "owner of file" sets avatar for room "file last share room" from file "data/green-square-256.png" with 404
     And user "user with access to file" sets avatar for room "file last share room" from file "data/green-square-256.png" with 404
     And user "guest" sets avatar for room "file last share room" from file "data/green-square-256.png" with 404
-    Then user "owner of file" gets avatar for room "group room"
+    Then user "owner of file" gets avatar for room "file last share room"
     And last avatar is a default avatar of size "128"
-    And user "user with access to file" gets avatar for room "group room"
+    And user "user with access to file" gets avatar for room "file last share room"
     And last avatar is a default avatar of size "128"
-    And user "guest" gets avatar for room "group room"
+    And user "guest" gets avatar for room "file last share room"
     And last avatar is a default avatar of size "128"
 
 
@@ -213,11 +213,11 @@ Feature: avatar
     And user "guest" creates the password request room for last share with 201
     And user "guest" joins room "password request for last share room" with 200
     And user "owner of file" joins room "password request for last share room" with 200
-    When user "owner of file" sets avatar for room "file last share room" from file "data/green-square-256.png" with 404
-    And user "guest" sets avatar for room "file last share room" from file "data/green-square-256.png" with 404
-    Then user "owner of file" gets avatar for room "group room"
+    When user "owner of file" sets avatar for room "password request for last share room" from file "data/green-square-256.png" with 404
+    And user "guest" sets avatar for room "password request for last share room" from file "data/green-square-256.png" with 404
+    Then user "owner of file" gets avatar for room "password request for last share room"
     And last avatar is a default avatar of size "128"
-    And user "guest" gets avatar for room "group room"
+    And user "guest" gets avatar for room "password request for last share room"
     And last avatar is a default avatar of size "128"
 
 
@@ -226,16 +226,16 @@ Feature: avatar
     Given user "owner" creates room "group room"
       | roomType | 2 |
       | roomName | room |
-    When user "user0" sets avatar for room "group room" from file "data/green-rectangle-256-128.png" with 400
-    Then user "user0" gets avatar for room "group room"
+    When user "owner" sets avatar for room "group room" from file "data/green-rectangle-256-128.png" with 400
+    Then user "owner" gets avatar for room "group room"
     And last avatar is a default avatar of size "128"
 
   Scenario: set not an image as generic user avatar
     Given user "owner" creates room "group room"
       | roomType | 2 |
       | roomName | room |
-    When user "user0" sets avatar for room "group room" from file "data/textfile.txt" with 400
-    Then user "user0" gets avatar for room "group room"
+    When user "owner" sets avatar for room "group room" from file "data/textfile.txt" with 400
+    Then user "owner" gets avatar for room "group room"
     And last avatar is a default avatar of size "128"
 
 
@@ -250,6 +250,7 @@ Feature: avatar
     And user "owner" sets avatar for room "group room" from file "data/green-square-256.png"
     And user "owner" gets avatar for room "group room" with size "256"
     And last avatar is a custom avatar of size "256" and color "#00FF00"
+    When user "owner" deletes avatar for room "group room"
     Then user "owner" gets avatar for room "group room"
     And last avatar is a default avatar of size "128"
     And user "moderator" gets avatar for room "group room"
@@ -283,7 +284,7 @@ Feature: avatar
     And user "owner" promotes "moderator" in room "group room" with 200
     And user "owner" adds "invited user" to room "group room" with 200
     And user "owner" sets avatar for room "group room" from file "data/green-square-256.png"
-    When user "invited user" deletes avatar for room "group room" with 403
+    When user "invited user" deletes avatar for room "group room" with 404
     And user "not invited user" deletes avatar for room "group room" with 404
     # Guest user names in tests must being with "guest"
     And user "guest not joined" deletes avatar for room "group room" with 404
@@ -392,7 +393,7 @@ Feature: avatar
     And user "owner" promotes "guest moderator" in room "public room" with 200
     And user "guest" joins room "public room" with 200
     And user "owner" sets avatar for room "public room" from file "data/green-square-256.png"
-    When user "invited user" deletes avatar for room "public room" with 403
+    When user "invited user" deletes avatar for room "public room" with 404
     And user "not invited but joined user" deletes avatar for room "public room" with 404
     And user "not joined user" deletes avatar for room "public room" with 404
     And user "guest" deletes avatar for room "public room" with 404
@@ -417,14 +418,14 @@ Feature: avatar
     Given user "owner" creates room "group room"
       | roomType | 2 |
       | roomName | room |
-    And user "user0" sets avatar for room "group room" from file "data/green-square-256.png"
-    When user "user0" gets avatar for room "group room" with size "512"
+    And user "owner" sets avatar for room "group room" from file "data/green-square-256.png"
+    When user "owner" gets avatar for room "group room" with size "512"
     Then last avatar is a custom avatar of size "512" and color "#00FF00"
 
   Scenario: get room avatar with a smaller size than the original one
     Given user "owner" creates room "group room"
       | roomType | 2 |
       | roomName | room |
-    And user "user0" sets avatar for room "group room" from file "data/green-square-256.png"
-    When user "user0" gets avatar for room "group room" with size "128"
+    And user "owner" sets avatar for room "group room" from file "data/green-square-256.png"
+    When user "owner" gets avatar for room "group room" with size "128"
     Then last avatar is a custom avatar of size "128" and color "#00FF00"

@@ -74,6 +74,7 @@ class FeatureContext implements Context, SnippetAcceptingContext {
 	/** @var SharingContext */
 	private $sharingContext;
 
+	use AvatarTrait;
 	use CommandLineTrait;
 
 	public static function getTokenForIdentifier(string $identifier) {
@@ -1499,5 +1500,28 @@ class FeatureContext implements Context, SnippetAcceptingContext {
 	 */
 	protected function assertStatusCode(ResponseInterface $response, int $statusCode, string $message = '') {
 		Assert::assertEquals($statusCode, $response->getStatusCode(), $message);
+	}
+
+	/**
+	 * @Then /^the following headers should be set$/
+	 * @param TableNode $table
+	 * @throws \Exception
+	 */
+	public function theFollowingHeadersShouldBeSet(TableNode $table) {
+		foreach ($table->getTable() as $header) {
+			$headerName = $header[0];
+			$expectedHeaderValue = $header[1];
+			$returnedHeader = $this->response->getHeader($headerName)[0];
+			if ($returnedHeader !== $expectedHeaderValue) {
+				throw new \Exception(
+					sprintf(
+						"Expected value '%s' for header '%s', got '%s'",
+						$expectedHeaderValue,
+						$headerName,
+						$returnedHeader
+					)
+				);
+			}
+		}
 	}
 }
