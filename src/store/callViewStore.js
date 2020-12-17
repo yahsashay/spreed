@@ -49,7 +49,10 @@ const getters = {
 	getBlurFilter: (state) => (width, height) => {
 		return `filter: blur(${(width * height * state.videoBackgroundBlur) / 1000}px)`
 	},
-	isParticipantRaisedHand: (state) => (peerId) => !!state.participantRaisedHands[peerId],
+	isParticipantRaisedHand: (state) => (peerId) => {
+		console.log('isParticipantRaisedHand', peerId, state.participantRaisedHands, state.participantRaisedHands[peerId])
+		return state.participantRaisedHands[peerId]?.state
+	}
 }
 
 const mutations = {
@@ -72,9 +75,14 @@ const mutations = {
 	presentationStarted(state, value) {
 		state.presentationStarted = value
 	},
-	setParticipantHandRaised(state, { peerId, raised }) {
-		if (raised) {
-			Vue.set(state.participantRaisedHands, peerId, raised)
+	setParticipantHandRaised(state, { peerId, raisedHand }) {
+		if (!peerId) {
+			throw new Error('Missing or empty peerId argument in call to setParticipantHandRaised');
+		}
+		console.log('setParticipantHandRaised', peerId, raisedHand)
+		if (raisedHand && raisedHand.state) {
+			Vue.set(state.participantRaisedHands, peerId, raisedHand)
+			console.log(state.participantRaisedHands)
 		} else {
 			Vue.delete(state.participantRaisedHands, peerId)
 		}
@@ -143,8 +151,8 @@ const actions = {
 		}
 	},
 
-	setParticipantHandRaised(context, { peerId, raised }) {
-		context.commit('setParticipantHandRaised', { peerId, raised })
+	setParticipantHandRaised(context, { peerId, raisedHand }) {
+		context.commit('setParticipantHandRaised', { peerId, raisedHand })
 	},
 
 	/**
