@@ -302,6 +302,16 @@ class Manager {
 	 * @return Room[]
 	 */
 	public function getRoomsForUser(string $userId, bool $includeLastMessage = false): array {
+		return $this->getRoomsForActor(Attendee::ACTOR_USERS, $userId, $includeLastMessage);
+	}
+
+	/**
+	 * @param string $actorType
+	 * @param string $actorId
+	 * @param bool $includeLastMessage
+	 * @return Room[]
+	 */
+	public function getRoomsForActor(string $actorType, string $actorId, bool $includeLastMessage = false): array {
 		$query = $this->db->getQueryBuilder();
 		$helper = new SelectHelper();
 		$helper->selectRoomsTable($query);
@@ -309,8 +319,8 @@ class Manager {
 		$helper->selectSessionsTable($query);
 		$query->from('talk_rooms', 'r')
 			->leftJoin('r', 'talk_attendees', 'a', $query->expr()->andX(
-				$query->expr()->eq('a.actor_id', $query->createNamedParameter($userId)),
-				$query->expr()->eq('a.actor_type', $query->createNamedParameter(Attendee::ACTOR_USERS)),
+				$query->expr()->eq('a.actor_id', $query->createNamedParameter($actorId)),
+				$query->expr()->eq('a.actor_type', $query->createNamedParameter($actorType)),
 				$query->expr()->eq('a.room_id', 'r.id')
 			))
 			->leftJoin('a', 'talk_sessions', 's', $query->expr()->andX(
@@ -331,7 +341,7 @@ class Manager {
 			}
 
 			$room = $this->createRoomObject($row);
-			if ($userId !== null && isset($row['actor_id'])) {
+			if ($actorType === Attendee::ACTOR_USERS && isset($row['actor_id'])) {
 				$room->setParticipant($row['actor_id'], $this->createParticipantObject($room, $row));
 			}
 			$rooms[] = $room;
