@@ -1117,6 +1117,10 @@ class RoomController extends AEnvironmentAwareController {
 
 		/** @var Participant[] $participants */
 		foreach ($participants as $participant) {
+			if ($participant->getAttendee()->getActorType() === Attendee::ACTOR_GROUP) {
+				continue;
+			}
+
 			$result = [
 				'inCall' => Participant::FLAG_DISCONNECTED,
 				'lastPing' => 0,

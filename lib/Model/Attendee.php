@@ -53,6 +53,7 @@ use OCP\AppFramework\Db\Entity;
  */
 class Attendee extends Entity {
 	public const ACTOR_USERS = 'users';
+	public const ACTOR_GROUP = 'group';
 	public const ACTOR_GUESTS = 'guests';
 	public const ACTOR_EMAILS = 'emails';
 
